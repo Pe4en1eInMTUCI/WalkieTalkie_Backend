@@ -26,10 +26,5 @@ public class RequestController {
         }
     }
 
-    @GetMapping("/zalupa")
-    public String zalupa() {
-        return "zalupa";
-    }
-
 
 }
