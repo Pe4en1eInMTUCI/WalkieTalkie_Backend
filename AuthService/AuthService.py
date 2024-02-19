@@ -9,11 +9,6 @@ import DataBaseWorker as db
 app = FastAPI()
 
 
-@app.get("/api")
-def default():
-    return "WalkieTalkie AuthService is working!"
-
-
 @app.get("/api/sendcode")
 def sendCode(userIP, userPhone):
     response = requests.get(f"https://sms.ru/code/call?phone={userPhone}&ip={userIP}&api_id=2356D300-3BA5-FCFD-7CE5-4F800426C6BD").json()
