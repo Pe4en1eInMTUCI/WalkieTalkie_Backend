@@ -6,7 +6,7 @@ import secrets
 
 def userExists(username):
     try:
-        connection = sqlite3.connect("./WalkieTalkie.db")
+        connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
 
         cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
@@ -21,18 +21,16 @@ def userExists(username):
 
 def addUser(phone, username, password):
     try:
-        connection = sqlite3.connect("./WalkieTalkie.db")
+        connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
 
-        password = sha256(password.encode("UTF-8".hexdigest)).hexdigest()
+        password = sha256(password.encode("UTF-8")).hexdigest()
 
-        cursor.execute("INSERT INTO users VALUES phone, username, password (?, ?, ?)", (phone, username, password,))
+        cursor.execute("INSERT INTO users (phone, username, password) VALUES (?, ?, ?)", (phone, username, password,))
+        connection.commit()
 
-        connection.close()
-        return "User added!"
+        return "User registered!"
     except:
-        return "Error!"
+        return "Error: Can not register user!"
 
 
-
-addUser("79778614427", "pe4en1e", "somepassword")

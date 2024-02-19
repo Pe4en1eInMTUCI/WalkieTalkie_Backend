@@ -21,7 +21,7 @@ def sendCode(userIP, userPhone):
 
 
 @app.post("/api/register")
-def regUser(phone: int = Form(), username: str = Form(...), password: str = Form(...)):
+def regUser(phone: str = Form(), username: str = Form(...), password: str = Form(...)):
     if not db.userExists(username):
         return db.addUser(phone, username, password)
     else:
