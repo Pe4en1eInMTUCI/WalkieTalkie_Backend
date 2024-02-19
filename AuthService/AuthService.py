@@ -21,18 +21,19 @@ def sendCode(userIP, userPhone):
 
 
 @app.post("/api/register")
-def regUser(phone: str = Form(), username: str = Form(...), password: str = Form(...)):
-    if not db.userExists(username):
+def regUser(phone: str = Form(...), username: str = Form(...), password: str = Form(...)):
+    if not db.userExists(phone):
         return db.addUser(phone, username, password)
     else:
         return 'Error: User exists!'
 
 
-
-
 @app.post("/api/login")
-def loginUser():
-    pass
+def loginUser(phone: str = Form(...), password: str = Form(...)):
+    if db.userExists(phone):
+        return db.checkPassword(phone,  password)
+    else:
+        return 'Error: User does not exists!'
 
 
 

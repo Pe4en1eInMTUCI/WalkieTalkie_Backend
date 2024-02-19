@@ -4,12 +4,12 @@ from hashlib import sha256
 import secrets
 
 
-def userExists(username):
+def userExists(phone):
     try:
         connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+        cursor.execute("SELECT * FROM users WHERE phone = ?", (phone,))
         result = cursor.fetchall()
 
         connection.close()
@@ -33,4 +33,25 @@ def addUser(phone, username, password):
     except:
         return "Error: Can not register user!"
 
+
+def checkPassword(phone, password):
+    password = sha256(password.encode("UTF-8")).hexdigest()
+
+    connection = sqlite3.connect("WalkieTalkie.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE phone = ?", (phone,))
+    result = cursor.fetchall()
+
+    Meta = []
+
+    for x in result:
+        Meta.append(x)
+
+    dataPassword = Meta[0][3]
+
+
+    connection.close()
+
+    return secrets.compare_digest(password, dataPassword)
 
