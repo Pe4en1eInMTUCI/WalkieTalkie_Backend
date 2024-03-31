@@ -1,4 +1,3 @@
-
 import sqlite3
 from hashlib import sha256
 import secrets
@@ -50,8 +49,6 @@ def checkPassword(phone, password):
 
     dataPassword = Meta[0][3]
 
-
     connection.close()
 
     return secrets.compare_digest(password, dataPassword)
-
