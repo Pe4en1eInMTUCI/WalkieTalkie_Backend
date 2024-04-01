@@ -44,3 +44,14 @@ def loginUser(phone: str = Form(...), password: str = Form(...)):
         return db.checkPassword(phone, password)
     else:
         return 'Error: User does not exists!'
+
+
+@app.post("/api/changepassword")
+def changePassword(phone: str = Form(...), password: str = Form(...), newPassword: str = Form(...)):
+    if db.checkPassword(phone, password):
+        db.setPassword(phone, newPassword)
+        return "Password changed!"
+    else:
+        return "Wrong password!"
+
+
