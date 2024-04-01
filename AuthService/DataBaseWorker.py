@@ -52,3 +52,24 @@ def checkPassword(phone, password):
     connection.close()
 
     return secrets.compare_digest(password, dataPassword)
+
+
+def setPassword(phone, newpassword):
+    try:
+        newPass = sha256(newpassword.encode("UTF-8")).hexdigest()
+
+        connection = sqlite3.connect("WalkieTalkie.db")
+        cursor = connection.cursor()
+
+        cursor.execute("UPDATE users SET password = ? WHERE phone = ?", (newPass, phone,))
+
+        connection.commit()
+
+        connection.close()
+
+        return True
+
+    except:
+        return False
+
+
