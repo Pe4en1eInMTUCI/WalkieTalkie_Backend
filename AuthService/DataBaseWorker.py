@@ -116,5 +116,4 @@ def getDialogs(username):
 
 
 
-print(getDialogs("pe4en1e"))
 
