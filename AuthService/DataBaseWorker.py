@@ -1,7 +1,7 @@
 import sqlite3
 from hashlib import sha256
 import secrets
-
+import json
 
 def userExists(phone):
     try:
@@ -18,15 +18,21 @@ def userExists(phone):
         return False
 
 
-def addUser(phone, username, password):
+def addUser(phone, name, username, password):
     try:
         connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
 
         password = sha256(password.encode("UTF-8")).hexdigest()
 
-        cursor.execute("INSERT INTO users (phone, username, password) VALUES (?, ?, ?)", (phone, username, password,))
+        cursor.execute("INSERT INTO users (phone, name, username, password) VALUES (?, ?, ?, ?)", (phone, name, username, password,))
         connection.commit()
+
+        connection.close()
+
+
+        addDialogList(username)
+
 
         return "User registered!"
     except:
@@ -72,4 +78,43 @@ def setPassword(phone, newpassword):
     except:
         return False
 
+
+
+def getLastID():
+    cursor = sqlite3.connect("WalkieTalkie.db").cursor()
+    result = cursor.execute("SELECT seq FROM sqlite_sequence WHERE name='users'").fetchall()[0][0]
+
+    print(result)
+
+
+def addDialogList(username):
+
+        connection = sqlite3.connect("WalkieTalkie.db")
+        cursor = connection.cursor()
+
+        cursor.execute(f"CREATE TABLE {username} (userchat TEXT)")
+
+        connection.commit()
+        connection.close()
+
+
+def getDialogs(username):
+    connection = sqlite3.connect("WalkieTalkie.db")
+    cursor = connection.cursor()
+
+    result = cursor.execute(f"SELECT userchat FROM {username}").fetchall()
+
+    connection.commit()
+    connection.close()
+
+    response = []
+
+    for user in result:
+        response.append(user[0])
+
+    return json.dumps(response)
+
+
+
+print(getDialogs("pe4en1e"))
 

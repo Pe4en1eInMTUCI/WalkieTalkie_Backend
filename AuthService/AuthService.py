@@ -31,19 +31,19 @@ def textCode(userPhone):
 
 
 @app.post("/api/register")
-def regUser(phone: str = Form(...), username: str = Form(...), password: str = Form(...)):
+def regUser(phone: str = Form(...), name: str = Form(...), username: str = Form(...), password: str = Form(...)):
     if not db.userExists(phone):
-        return db.addUser(phone, username, password)
-    else:
-        return 'Error: User exists!'
+        return db.addUser(phone, name, username, password)
+
+    return 'Error: User exists!'
 
 
 @app.post("/api/login")
 def loginUser(phone: str = Form(...), password: str = Form(...)):
     if db.userExists(phone):
         return db.checkPassword(phone, password)
-    else:
-        return 'Error: User does not exists!'
+
+    return 'Error: User does not exists!'
 
 
 @app.post("/api/changepassword")
@@ -51,7 +51,10 @@ def changePassword(phone: str = Form(...), password: str = Form(...), newPasswor
     if db.checkPassword(phone, password):
         db.setPassword(phone, newPassword)
         return "Password changed!"
-    else:
-        return "Wrong password!"
+
+    return "Error: Wrong password!"
 
 
+@app.post("/api/getdialogs")
+def getDialogs(username: str = Form(...)):
+    return db.addDialogList(username)

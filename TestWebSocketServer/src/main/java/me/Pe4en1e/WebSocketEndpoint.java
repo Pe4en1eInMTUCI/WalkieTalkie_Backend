@@ -14,8 +14,6 @@ public class WebSocketEndpoint {
     @OnWebSocketConnect
     public void clientConnect(Session session) throws InterruptedException, IOException {
         System.out.println("New connection: " + session.getRemoteAddress().toString());
-        DataSender dataSender = new DataSender();
-        dataSender.sendData(session);
     }
 
     @OnWebSocketClose
@@ -26,7 +24,9 @@ public class WebSocketEndpoint {
 
     @OnWebSocketMessage
     public void clientMessage(Session session, String message) throws IOException {
-        System.out.println(session.getRemoteAddress() + ": " + message);
+
     }
+
+
 
 }
