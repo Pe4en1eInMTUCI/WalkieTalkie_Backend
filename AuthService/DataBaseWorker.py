@@ -112,7 +112,7 @@ def getDialogs(username):
     for user in result:
         response.append(user[0])
 
-    return json.dumps(response)
+    return response
 
 
 
