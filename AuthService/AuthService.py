@@ -51,12 +51,15 @@ def regUser():
 def loginUser():
 
     phone = request.form.get('phone')
-    password = request.form.get('phone')
+    password = request.form.get('password')
 
     if db.userExists(phone):
-        return db.checkPassword(phone, password)
+        if db.checkPassword(phone, password):
+            return {"status": "OK"}
 
-    return 'Error: User does not exists!'
+        return {"status": "wrong pass"}
+
+    return {'status': "user not exists"}
 
 
 # @app.post("/api/changepassword", methods=['POST'])
