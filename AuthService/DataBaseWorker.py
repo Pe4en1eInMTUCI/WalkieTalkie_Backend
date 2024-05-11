@@ -116,3 +116,15 @@ def getDialogs(username):
 
 
 
+def getUsernameByPhone(phone):
+    connection = sqlite3.connect("WalkieTalkie.db")
+    cursor = connection.cursor()
+
+    result = cursor.execute("SELECT username FROM users WHERE phone = ?", (phone,)).fetchall()[0][0]
+
+    connection.commit()
+    connection.close()
+
+    return result
+
+
