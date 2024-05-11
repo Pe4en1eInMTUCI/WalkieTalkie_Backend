@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, request
 import requests
+from pydantic import BaseModel
 
 import DataBaseWorker as db
 import randomCode as rc
@@ -73,16 +74,9 @@ def loginUser():
 
 @app.route("/api/getdialogs",  methods=['POST'])
 def getDialogs():
-    phone = request.form.get('phone')
-
-    username = db.getUsernameByPhone(phone)
+    username = request.form.get('username')
 
     return json.dumps(db.getDialogs(username))
-
-
-@app.route("/api/getUsernameByPhone",  methods=['POST'])
-def usernamebyphone():
-    return {"username": db.getUsernameByPhone(request.form.get('phone'))}
 
 
 if __name__ == "__main__":
