@@ -1,14 +1,29 @@
 import sqlite3
 from hashlib import sha256
 import secrets
+import json
 
-
-def userExists(phone):
+def phoneExists(phone):
     try:
         connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
 
         cursor.execute("SELECT * FROM users WHERE phone = ?", (phone,))
+        result = cursor.fetchall()
+
+        connection.close()
+
+        return bool(len(result))
+    except:
+        return False
+
+
+def usernameExists(username):
+    try:
+        connection = sqlite3.connect("WalkieTalkie.db")
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
         result = cursor.fetchall()
 
         connection.close()
@@ -27,6 +42,12 @@ def addUser(phone, username, password):
 
         cursor.execute("INSERT INTO users (phone, username, password) VALUES (?, ?, ?)", (phone, username, password,))
         connection.commit()
+
+        connection.close()
+
+
+        addDialogList(username)
+
 
         return "User registered!"
     except:
@@ -72,4 +93,52 @@ def setPassword(phone, newpassword):
     except:
         return False
 
+
+
+def getLastID():
+    cursor = sqlite3.connect("WalkieTalkie.db").cursor()
+    result = cursor.execute("SELECT seq FROM sqlite_sequence WHERE name='users'").fetchall()[0][0]
+
+    print(result)
+
+
+def addDialogList(username):
+
+        connection = sqlite3.connect("WalkieTalkie.db")
+        cursor = connection.cursor()
+
+        cursor.execute(f"CREATE TABLE {username} (userchat TEXT)")
+
+        connection.commit()
+        connection.close()
+
+
+def getDialogs(username):
+    connection = sqlite3.connect("WalkieTalkie.db")
+    cursor = connection.cursor()
+
+    result = cursor.execute(f"SELECT userchat FROM {username}").fetchall()
+
+    connection.commit()
+    connection.close()
+
+    response = []
+
+    for user in result:
+        response.append(user[0])
+
+    return response
+
+
+
+def getUsernameByPhone(phone):
+    connection = sqlite3.connect("WalkieTalkie.db")
+    cursor = connection.cursor()
+
+    result = cursor.execute("SELECT username FROM users WHERE phone = ?", (phone,)).fetchall()[0][0]
+
+    connection.commit()
+    connection.close()
+
+    return result
 
