@@ -36,7 +36,7 @@ def textCode():
         f"https://sms.ru/sms/send?api_id=2356D300-3BA5-FCFD-7CE5-4F800426C6BD&to={userPhone}&msg={code}&json=1").json()
 
     if response["status"] == "OK":
-        return code
+        return {"code": code}
 
     return "Can't send sms code!"
 
