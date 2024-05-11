@@ -7,3 +7,5 @@ AuthService/__pycache__/DataBaseWorker.cpython-312.pyc
 AuthService/.idea/misc.xml
 AuthService/__pycache__/DataBaseWorker.cpython-312.pyc
 AuthService/__pycache__/randomCode.cpython-312.pyc
+*.pyc
+*.xml
