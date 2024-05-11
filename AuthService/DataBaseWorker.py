@@ -3,7 +3,7 @@ from hashlib import sha256
 import secrets
 import json
 
-def userExists(phone):
+def phoneExists(phone):
     try:
         connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
@@ -18,14 +18,29 @@ def userExists(phone):
         return False
 
 
-def addUser(phone, name, username, password):
+def usernameExists(username):
+    try:
+        connection = sqlite3.connect("WalkieTalkie.db")
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+        result = cursor.fetchall()
+
+        connection.close()
+
+        return bool(len(result))
+    except:
+        return False
+
+
+def addUser(phone, username, password):
     try:
         connection = sqlite3.connect("WalkieTalkie.db")
         cursor = connection.cursor()
 
         password = sha256(password.encode("UTF-8")).hexdigest()
 
-        cursor.execute("INSERT INTO users (phone, name, username, password) VALUES (?, ?, ?, ?)", (phone, name, username, password,))
+        cursor.execute("INSERT INTO users (phone, username, password) VALUES (?, ?, ?)", (phone, username, password,))
         connection.commit()
 
         connection.close()
@@ -53,7 +68,7 @@ def checkPassword(phone, password):
     for x in result:
         Meta.append(x)
 
-    dataPassword = Meta[0][4]
+    dataPassword = Meta[0][3]
 
     connection.close()
 

@@ -36,15 +36,31 @@ def textCode(userPhone):
 def regUser():
 
     phone = request.form.get('phone')
-    name = request.form.get('phone')
-    username = request.form.get('phone')
-    password = request.form.get('phone')
+    username = request.form.get('username')
+    password = request.form.get('password')
 
-    if not db.userExists(phone):
-        return db.addUser(phone, name, username, password)
+    if not db.phoneExists(phone):
+        if not db.usernameExists(username):
+            db.addUser(phone, username, password)
+            return {"status": "OK"}
 
-    return 'Error: User exists!'
+        return {"status": "username exists"}
 
+    return {'status': 'phone exists'}
+
+
+@app.route('/api/possibleToReg', methods=['POST'])
+def possibleToReg():
+    phone = request.form.get('phone')
+    username = request.form.get('username')
+
+    if not db.phoneExists(phone):
+        if not db.usernameExists(username):
+            return {"status": "OK"}
+
+        return {"status": "username exists"}
+
+    return {'status': 'phone exists'}
 
 @app.route("/api/login", methods=['POST'])
 def loginUser():
@@ -52,7 +68,7 @@ def loginUser():
     phone = request.form.get('phone')
     password = request.form.get('password')
 
-    if db.userExists(phone):
+    if db.phoneExists(phone):
         if db.checkPassword(phone, password):
             return {"status": "OK"}
 
