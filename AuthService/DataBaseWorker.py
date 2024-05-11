@@ -53,7 +53,7 @@ def checkPassword(phone, password):
     for x in result:
         Meta.append(x)
 
-    dataPassword = Meta[0][3]
+    dataPassword = Meta[0][4]
 
     connection.close()
 
@@ -112,8 +112,7 @@ def getDialogs(username):
     for user in result:
         response.append(user[0])
 
-    return json.dumps(response)
-
+    return response
 
 
 
