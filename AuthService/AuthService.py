@@ -11,25 +11,34 @@ app = Flask(__name__)
 
 
 @app.route("/api/voicecode")
-def voiceCode(userIP, userPhone):
+def voiceCode():
+
+    userIP = request.args.get("userIP")
+    userPhone = request.args.get("userPhone")
+
     response = requests.get(
         f"https://sms.ru/code/call?phone={userPhone}&ip={userIP}&api_id=2356D300-3BA5-FCFD-7CE5-4F800426C6BD").json()
 
+    print(response)
+
     if response["status"] == "OK":
-        return response["code"]
-    else:
-        return "Can't call to user!"
+        return {"code": response["code"]}
+
+    return "Can't call to user!"
 
 @app.route("/api/textcode")
-def textCode(userPhone):
+def textCode():
+
+    userPhone = request.args.get('userPhone')
+
     code = rc.random_code()
     response = requests.get(
         f"https://sms.ru/sms/send?api_id=2356D300-3BA5-FCFD-7CE5-4F800426C6BD&to={userPhone}&msg={code}&json=1").json()
 
     if response["status"] == "OK":
         return code
-    else:
-        return "Can't send sms code!"
+
+    return "Can't send sms code!"
 
 
 @app.route("/api/register", methods=['POST'])
