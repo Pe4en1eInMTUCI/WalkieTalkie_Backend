@@ -1,1 +1,3 @@
-WalkieTalkie Backend
+#WalkieTalkie Backend
+WalkieTalkie - это веб приложение для общения пользователей.
+Чтобы запустить сервис активируйте скрипт 
