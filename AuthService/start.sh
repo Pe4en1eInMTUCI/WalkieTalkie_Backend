@@ -1,2 +1,2 @@
-uvicorn AuthService:app --host localhost --port 4391
+gunicorn AuthService:app -b 0.0.0.0:1232
 
