@@ -3,8 +3,10 @@ import json
 from flask import Flask, request
 import requests
 
-import DataBaseWorker as db
+# import DataBaseWorker as db SQLITE DB НЕ ИСПОЛЬЗУЕМ БОЛЬШЕ
 import randomCode as rc
+
+import MySQLWorker as db # ИСПОЛЬЗУЕМ MYSQL
 
 
 app = Flask(__name__)
@@ -91,7 +93,7 @@ def loginUser():
 #     if db.checkPassword(phone, password):
 #         db.setPassword(phone, newPassword)
 #         return "Password changed!"
-#
+#    ПОТОМ МБ ДОДЕЛАЕМ
 #     return "Error: Wrong password!"
 
 

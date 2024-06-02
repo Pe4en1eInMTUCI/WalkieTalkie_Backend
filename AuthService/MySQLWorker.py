@@ -115,7 +115,7 @@ def addDialogList(username):
         )
 
         cursor = DataBase.cursor()
-        cursor.execute("CREATE TABLE ? (chatID INT AUTO_INCREMENT PRIMARY KEY, userID VARCHAR(255))", (username,))
+        cursor.execute("CREATE TABLE ? (userID VARCHAR(255))", (username,))
         DataBase.commit()
         DataBase.close()
 
@@ -136,8 +136,38 @@ def getDialogList(username):
 
         cursor = DataBase.cursor()
 
-#         НАДО ВОЗВРАЩАТЬ СЛОВАРЬ {chatID: userID}
+        result = cursor.execute(f"SELECT userID FROM {username}").fetchall()
+
+        DataBase.commit()
+        DataBase.close()
+
+        response = []
+
+        for user in result:
+            response.append(user[0])
+
+        return response
 
 
     except Exception as e:
         return f"Exception!\n\n{e}"
+
+
+def getUsernameByPhone(phone):
+
+    DataBase = mysql.connector.connect(
+        host="147.45.138.238",
+        port="3306",
+        user="gen_user",
+        password="Ib&c5<ysBY}l71",
+        database="default_db"
+    )
+
+    cursor = DataBase.cursor()
+
+    result = cursor.execute("SELECT username FROM users WHERE phone = ?", (phone,)).fetchall()[0][0]
+
+    DataBase.commit()
+    DataBase.close()
+
+    return result
