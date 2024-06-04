@@ -19,6 +19,8 @@ import java.util.Map;
 @WebSocket
 public class WebSocketEndpoint {
 
+    DatabaseWorker databaseWorker = new DatabaseWorker();
+
     private final HashMap<Session, String> activeUsers = new HashMap<Session, String>();
 
     @OnWebSocketConnect
@@ -31,6 +33,10 @@ public class WebSocketEndpoint {
     public void clientDisconnect(Session session) {
         System.out.println("Client disconnect: " + session.getRemoteAddress().toString());
 
+        String disconectedUserID = activeUsers.get(session);
+
+        activeUsers.remove(session);
+        databaseWorker.setUserOffline(disconectedUserID);
 
     }
 
@@ -46,6 +52,13 @@ public class WebSocketEndpoint {
 
             case "newConnection":
                 System.out.println("userID: " + node.get("userID").asText());
+
+                String userID = node.get("userID").asText();
+
+                activeUsers.put(session, userID);
+
+                databaseWorker.setUserOnline(userID);
+
                 break;
 
             case "newMessage":
@@ -53,6 +66,22 @@ public class WebSocketEndpoint {
                 System.out.println("to: " + node.get("to").asText());
                 System.out.println("content: " + node.get("content").asText());
                 System.out.println("chat_id: " + node.get("chat_id").asText());
+
+
+                String fromUser = node.get("from").asText();
+                String toUser = node.get("to").asText();
+                String content = node.get("content").asText();
+                int chat_id = node.get("chat_id").asInt();
+
+
+                databaseWorker.addMessage(chat_id, fromUser, toUser, content);
+
+                for (String activeUser : activeUsers.values()) {
+                    if (activeUser.equals(toUser)) {
+                        System.out.println("trying to notify user");
+                    }
+                }
+
                 break;
 
         }
