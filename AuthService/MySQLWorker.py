@@ -61,10 +61,12 @@ def addUser(phone, username, password):
 
         avatarLink = f"https://api.dicebear.com/8.x/initials/svg?seed={username}"
 
-        cursor.execute("INSERT INTO users (phone, username, password, isOnline, avatar) VALUES (?, ?, ?, 1, ?)", (phone, username, password, avatarLink))
+        cursor.execute("INSERT INTO users (phone, username, password, isOnline, avatar) VALUES (%s, %s, %s, 1, %s)", (phone, username, password, avatarLink))
 
         DataBase.commit()
         DataBase.close()
+
+        addDialogList(username)
 
         return True
 
@@ -85,8 +87,9 @@ def checkPassword(phone, password):
         password = hashlib.sha256(password.encode('UTF-8')).hexdigest()
 
         cursor = DataBase.cursor()
-        cursor.execute("SELECT * FROM users WHERE phone = ?", (phone,))
+        cursor.execute("SELECT * FROM users WHERE phone = %s", (phone,))
         result = cursor.fetchall()
+
 
         Meta = []
 
@@ -115,7 +118,7 @@ def addDialogList(username):
         )
 
         cursor = DataBase.cursor()
-        cursor.execute("CREATE TABLE ? (userID VARCHAR(255))", (username,))
+        cursor.execute(f"CREATE TABLE {username} (userID VARCHAR(255))")
         DataBase.commit()
         DataBase.close()
 
@@ -136,14 +139,16 @@ def getDialogList(username):
 
         cursor = DataBase.cursor()
 
-        result = cursor.execute(f"SELECT userID FROM {username}").fetchall()
+        state = cursor.execute(f"SELECT userID FROM {username}")
+        res = cursor.fetchall()
+        print(res)
 
         DataBase.commit()
         DataBase.close()
 
         response = []
 
-        for user in result:
+        for user in res:
             response.append(user[0])
 
         return response
@@ -165,9 +170,31 @@ def getUsernameByPhone(phone):
 
     cursor = DataBase.cursor()
 
-    result = cursor.execute("SELECT username FROM users WHERE phone = ?", (phone,)).fetchall()[0][0]
+    state = cursor.execute("SELECT username FROM users WHERE phone = %s", (phone,))
+    res = cursor.fetchall()[0][0]
+    print(res)
 
     DataBase.commit()
     DataBase.close()
 
-    return result
+    return res
+
+def getIDbyUsername(username):
+    DataBase = mysql.connector.connect(
+        host="147.45.138.238",
+        port="3306",
+        user="gen_user",
+        password="Ib&c5<ysBY}l71",
+        database="default_db"
+    )
+
+    cursor = DataBase.cursor()
+
+    state = cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+    res = cursor.fetchall()[0][0]
+    print(res)
+
+    DataBase.commit()
+    DataBase.close()
+
+    return res

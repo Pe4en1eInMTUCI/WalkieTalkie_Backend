@@ -104,12 +104,19 @@ def getDialogs():
 
     username = db.getUsernameByPhone(phone)
 
-    return json.dumps(db.getDialogs(username))
+    return json.dumps(db.getDialogList(username))
 
 
 @app.route("/api/getUsernameByPhone",  methods=['POST'])
 def usernamebyphone():
-    return {"username": db.getUsernameByPhone(request.form.get('phone'))}
+    phone = db.getUsernameByPhone(request.form.get('phone'))
+    print(phone)
+    return {"username": phone}
+
+
+@app.route('/api/getIDbyUsername', methods=['POST'])
+def idbyusername():
+    return {'userID': db.getIDbyUsername(request.form.get('username'))}
 
 
 if __name__ == "__main__":
